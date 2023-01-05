@@ -136,7 +136,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // const modalTimerId = setTimeout(openModal, 15000);
+  const modalTimerId = setTimeout(openModal, 15000);
 
   function showModalByScroll() {
     const scrolledToButton =
@@ -152,7 +152,6 @@ window.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", showModalByScroll);
 
   // Use classes for cards
-
   class MenuCart {
     constructor(src, alt, title, desc, price, parentSelector, ...classes) {
       this.src = src;
@@ -160,7 +159,6 @@ window.addEventListener("DOMContentLoaded", () => {
       this.title = title;
       this.desc = desc;
       this.price = price;
-      // this.classes = classes.length ? classes : ["menu__item"];
       this.classes = classes;
       this.parent = document.querySelector(parentSelector);
       this.transfer = 40;
@@ -224,5 +222,48 @@ window.addEventListener("DOMContentLoaded", () => {
     ".menu .container",
     "menu__item"
   ).render();
-});
 
+  // Form
+
+  const forms = document.querySelectorAll("form");
+
+  const message = {
+    loading: "Загрузка",
+    success: "Спасибо!Скоро мы с вами свяжемся",
+    failure: "Что-то пошло не так...",
+  };
+
+  forms.forEach((form) => {
+    postData(form);
+  });
+
+  function postData(form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const statusMessage = document.createElement("div");
+      statusMessage.classList.add("status");
+      statusMessage.textContent = message.loading;
+      form.append(statusMessage);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "./server.php");
+
+      const formData = new FormData(form);
+      xhr.send(formData);
+
+      xhr.addEventListener("load", () => {
+        if (xhr.status === 200) {
+          console.log(xhr.response);
+          statusMessage.textContent = message.success;
+          form.reset();
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 2000);
+        } else {
+          statusMessage.textContent = message.failure;
+        }
+      });
+    });
+  }
+});
