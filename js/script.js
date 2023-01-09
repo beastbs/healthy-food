@@ -257,6 +257,7 @@ window.addEventListener("DOMContentLoaded", () => {
           statusMessage.remove();
         } else {
           showThanksModal(message.failure);
+          statusMessage.remove();
         }
       });
     });
