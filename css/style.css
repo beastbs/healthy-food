@@ -626,7 +626,6 @@ a {
 }
 
 .status {
-  text-align: center;
-  font-size: 18px;
-  margin-top: 10px;
+  display: block;
+  margin: 0 auto;
 }
