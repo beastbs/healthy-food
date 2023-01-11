@@ -243,23 +243,39 @@ window.addEventListener("DOMContentLoaded", () => {
       statusMessage.classList.add("status");
       form.insertAdjacentElement("afterend", statusMessage);
 
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", "./server.php");
-
+      const object = {};
       const formData = new FormData(form);
-      xhr.send(formData);
 
-      xhr.addEventListener("load", () => {
-        if (xhr.status === 200) {
-          console.log(xhr.response);
+      formData.forEach((value, key) => {
+        object[key] = value;
+      });
+
+      fetch("./server.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(object),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.status, response.statusText);
+          }
+
+          return response.text();
+        })
+        .then((data) => {
+          console.log(data);
           showThanksModal(message.success);
+        })
+        .catch((e) => {
+          showThanksModal(message.failure);
+          console.log(e);
+        })
+        .finally(() => {
           form.reset();
           statusMessage.remove();
-        } else {
-          showThanksModal(message.failure);
-          statusMessage.remove();
-        }
-      });
+        });
     });
   }
 
