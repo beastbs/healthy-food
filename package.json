@@ -1,0 +1,26 @@
+{
+  "name": "healthy-food",
+  "version": "1.0.0",
+  "description": "\"landing page healthy food\"",
+  "main": "index.js",
+  "scripts": {
+    "s": "npx json-server --watch db.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beastbs/healthy-food.git"
+  },
+  "keywords": [
+    "healthy",
+    "food"
+  ],
+  "author": "Boris C. <beastbs.dev@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beastbs/healthy-food/issues"
+  },
+  "homepage": "https://github.com/beastbs/healthy-food#readme",
+  "devDependencies": {
+    "json-server": "^0.17.1"
+  }
+}

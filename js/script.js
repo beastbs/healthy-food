@@ -191,34 +191,28 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  new MenuCart(
-    "img/tabs/vegy.jpg",
-    "vegy",
-    "Меню “Фитнес”",
-    "Меню 'Фитнес' - это новый подход к приготовлению блюд: большесвежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!",
-    6,
-    ".menu .container"
-  ).render();
+  const getResource = async (url) => {
+    const result = await fetch(url);
 
-  new MenuCart(
-    "img/tabs/elite.jpg",
-    "elite",
-    "Меню “Премиум”",
-    "В меню “Премиум” мы используем не только красивый дизайн упаковки,но и качественное исполнение блюд. Красная рыба, морепродукты,фрукты - ресторанное меню без похода в ресторан!",
-    13,
-    ".menu .container",
-    "menu__item"
-  ).render();
+    if (!result.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${result.status}`);
+    }
 
-  new MenuCart(
-    "img/tabs/post.jpg",
-    "post",
-    "Меню Постное",
-    " Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофуи импортных вегетарианских стейков.",
-    8,
-    ".menu .container",
-    "menu__item"
-  ).render();
+    return await result.json();
+  };
+
+  getResource("http://localhost:3000/menu").then((menu) => {
+    menu.forEach(({ img, altimg, title, descr, price }) => {
+      new MenuCart(
+        img,
+        altimg,
+        title,
+        descr,
+        price,
+        ".menu .container"
+      ).render();
+    });
+  });
 
   // Form
 
@@ -231,10 +225,26 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   forms.forEach((form) => {
-    postData(form);
+    bindPostData(form);
   });
 
-  function postData(form) {
+  const postData = async (url, data) => {
+    const result = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data,
+    });
+
+    if (!result.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${result.status}`);
+    }
+
+    return await result.json();
+  };
+
+  function bindPostData(form) {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
 
@@ -243,27 +253,10 @@ window.addEventListener("DOMContentLoaded", () => {
       statusMessage.classList.add("status");
       form.insertAdjacentElement("afterend", statusMessage);
 
-      const object = {};
       const formData = new FormData(form);
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-      formData.forEach((value, key) => {
-        object[key] = value;
-      });
-
-      fetch("./server.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(object),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(response.status, response.statusText);
-          }
-
-          return response.text();
-        })
+      postData("http://localhost:3000/requests", json)
         .then((data) => {
           console.log(data);
           showThanksModal(message.success);
