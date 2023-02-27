@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Timer
 
-  const deadline = "2023-01-30";
+  const deadline = "2023-06-01";
 
   function getTimeRemaining(endtime) {
     let days, hours, minutes, seconds;
@@ -302,12 +302,19 @@ window.addEventListener("DOMContentLoaded", () => {
     prev = document.querySelector(".offer__slider-prev"),
     next = document.querySelector(".offer__slider-next");
 
+  const slidesWrapper = document.querySelector(".offer__slider-wrapper");
+  const slidesField = document.querySelector(".offer__slider-inner");
+  const widthSliderWrapper = window.getComputedStyle(slidesWrapper).width;
+  const widthInNumbers = +widthSliderWrapper.slice(
+    0,
+    widthSliderWrapper.length - 2
+  );
+
   const total = document.querySelector("#total"),
     current = document.querySelector("#current");
 
   let slideIndex = 1;
-
-  showSlides(slideIndex);
+  let offset = 0;
 
   if (slides.length < 10) {
     total.textContent = `0${slides.length}`;
@@ -315,33 +322,53 @@ window.addEventListener("DOMContentLoaded", () => {
     total.textContent = slides.length;
   }
 
-  function showSlides(n) {
-    if (n > slides.length) {
+  slidesField.style.width = 100 * slides.length + "%";
+  slidesField.style.display = "flex";
+  slidesField.style.transition = "0.5s all linear";
+
+  slidesWrapper.style.overflow = "hidden";
+
+  slides.forEach((slide) => (slide.style.width = widthSliderWrapper));
+
+  const countSlidesIndex = (index) => {
+    if (index > slides.length) {
       slideIndex = 1;
     }
-
-    if (n < 1) {
+    if (index < 1) {
       slideIndex = slides.length;
     }
+  };
 
-    slides.forEach((slide) => (slide.style.display = "none"));
-    slides[slideIndex - 1].style.display = "block";
+  const showSlides = (index) => {
+    countSlidesIndex(index);
 
     if (slideIndex < 10) {
       current.textContent = `0${slideIndex}`;
     } else {
       current.textContent = slideIndex;
     }
-  }
+  };
+  showSlides(slideIndex);
 
-  function plusSlide(n) {
-    showSlides((slideIndex += n));
-  }
+  next.addEventListener("click", () => {
+    if (offset === widthInNumbers * (slides.length - 1)) {
+      offset = 0;
+    } else {
+      offset += widthInNumbers;
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+    showSlides((slideIndex += 1));
+  });
 
   prev.addEventListener("click", () => {
-    plusSlide(-1);
-  });
-  next.addEventListener("click", () => {
-    plusSlide(1);
+    if (offset === 0) {
+      offset = widthInNumbers * (slides.length - 1);
+    } else {
+      offset = offset - widthInNumbers;
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+    showSlides((slideIndex -= 1));
   });
 });
