@@ -302,6 +302,7 @@ window.addEventListener("DOMContentLoaded", () => {
     prev = document.querySelector(".offer__slider-prev"),
     next = document.querySelector(".offer__slider-next");
 
+  const sliderContainer = document.querySelector(".offer__slider");
   const slidesWrapper = document.querySelector(".offer__slider-wrapper");
   const slidesField = document.querySelector(".offer__slider-inner");
   const widthSliderWrapper = window.getComputedStyle(slidesWrapper).width;
@@ -350,6 +351,32 @@ window.addEventListener("DOMContentLoaded", () => {
   };
   showSlides(slideIndex);
 
+  sliderContainer.style.position = "relative";
+
+  const carouselIndicators = document.createElement("ol");
+  carouselIndicators.className = "carousel-indicators";
+  sliderContainer.append(carouselIndicators);
+
+  const dots = [];
+
+  for (let i = 0; i < slides.length; i++) {
+    const dot = document.createElement("li");
+    dot.classList.add("dot");
+    dot.setAttribute("data-slide-to", i + 1);
+
+    if (i === 0) {
+      dot.classList.add("dot-active");
+    }
+
+    carouselIndicators.append(dot);
+    dots.push(dot);
+  }
+
+  const addActiveSlideDot = () => {
+    dots.forEach((dot) => dot.classList.remove("dot-active"));
+    dots[slideIndex - 1].classList.add("dot-active");
+  };
+
   next.addEventListener("click", () => {
     if (offset === widthInNumbers * (slides.length - 1)) {
       offset = 0;
@@ -358,7 +385,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     slidesField.style.transform = `translateX(-${offset}px)`;
+
     showSlides((slideIndex += 1));
+    addActiveSlideDot();
   });
 
   prev.addEventListener("click", () => {
@@ -369,6 +398,23 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     slidesField.style.transform = `translateX(-${offset}px)`;
+
     showSlides((slideIndex -= 1));
+    addActiveSlideDot();
+  });
+
+  carouselIndicators.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (target.classList.contains("dot")) {
+      const slideTo = Number(target.getAttribute("data-slide-to"));
+      slideIndex = slideTo;
+      offset = widthInNumbers * (slideTo - 1);
+
+      slidesField.style.transform = `translateX(-${offset}px)`;
+
+      showSlides(slideIndex);
+      addActiveSlideDot();
+    }
   });
 });
