@@ -664,3 +664,7 @@ a {
 .dot-active {
   background-color: rgb(28, 28, 30);
 }
+
+.error-text{
+  color: red;
+}
