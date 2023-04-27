@@ -1,33 +1,34 @@
+import {
+  calc,
+  cardsMenu,
+  forms,
+  modal,
+  productTabs,
+  slider,
+  timer,
+} from "./modules";
+
+import { deadline } from "./core/variables";
+import { deleteNotDigit, openModal } from "./utils";
+
 window.addEventListener("DOMContentLoaded", () => {
-  const productTabs = require("./modules/productTabs");
-  const cardsMenu = require("./modules/cardsMenu");
-  const timer = require("./modules/timer");
-  const modal = require("./modules/modal");
-  const forms = require("./modules/forms");
-  const slider = require("./modules/slider");
-  const calc = require("./modules/calc");
+  const modalTimerId = setTimeout(openModal, 50_000, ".modal");
 
-  const { deadline } = require("./core/variables");
-  const { deleteNotDigit } = require("./utils");
-
-  // Tabs
-  productTabs();
-
-  // Timer
-  timer(deadline);
-
-  // Modal
-  modal();
-
-  // Use classes for cards
+  productTabs(".tabheader__item", ".tabcontent", ".tabheader__items");
+  timer(".timer", deadline);
+  modal("[data-modal]", ".modal", modalTimerId);
   cardsMenu();
-
-  // Form
-  forms();
-
-  // Slider
-  slider(deleteNotDigit);
-
-  // Calc
+  forms("form", modalTimerId);
   calc();
+  slider({
+    container: ".offer__slider",
+    nextArrow: ".offer__slider-next",
+    prevArrow: ".offer__slider-prev",
+    slide: ".offer__slide",
+    wrapper: ".offer__slider-wrapper",
+    field: ".offer__slider-inner",
+    totalCounter: "#total",
+    currentCounter: "#current",
+    deleteNotDigit,
+  });
 });

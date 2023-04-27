@@ -1,6 +1,6 @@
 const { changeEndTimePromotion } = require("../utils");
 
-function timer(deadline) {
+function timer(id, deadline) {
   const endTimePromotion = document.querySelector(".promotion__end");
   changeEndTimePromotion(deadline, endTimePromotion);
 
@@ -60,7 +60,7 @@ function timer(deadline) {
       }
     }
   }
-  setClock(".timer", deadline);
+  setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

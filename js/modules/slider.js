@@ -1,15 +1,24 @@
-function slider(deleteNotDigit) {
-  const slides = document.querySelectorAll(".offer__slide"),
-    prev = document.querySelector(".offer__slider-prev"),
-    next = document.querySelector(".offer__slider-next");
+function slider({
+  container,
+  slide,
+  nextArrow,
+  prevArrow,
+  totalCounter,
+  currentCounter,
+  wrapper,
+  field,
+  deleteNotDigit}) {
+  const slides = document.querySelectorAll(slide),
+    prev = document.querySelector(prevArrow),
+    next = document.querySelector(nextArrow);
 
-  const sliderContainer = document.querySelector(".offer__slider");
-  const slidesWrapper = document.querySelector(".offer__slider-wrapper");
-  const slidesField = document.querySelector(".offer__slider-inner");
+  const sliderContainer = document.querySelector(container);
+  const slidesWrapper = document.querySelector(wrapper);
+  const slidesField = document.querySelector(field);
   const widthSliderWrapper = window.getComputedStyle(slidesWrapper).width;
 
-  const total = document.querySelector("#total"),
-    current = document.querySelector("#current");
+  const total = document.querySelector(totalCounter),
+    current = document.querySelector(currentCounter);
 
   let slideIndex = 1;
   let offset = 0;
@@ -119,4 +128,5 @@ function slider(deleteNotDigit) {
     }
   });
 }
-module.exports = slider;
+
+export default slider;

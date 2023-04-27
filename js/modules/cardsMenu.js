@@ -1,3 +1,5 @@
+import { getResource } from "../services";
+
 function cardsMenu() {
   class MenuCart {
     constructor(src, alt, title, desc, price, parentSelector, ...classes) {
@@ -41,16 +43,6 @@ function cardsMenu() {
     }
   }
 
-  const getResource = async (url) => {
-    const result = await fetch(url);
-
-    if (!result.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${result.status}`);
-    }
-
-    return await result.json();
-  };
-
   getResource("http://localhost:3000/menu").then((menu) => {
     menu.forEach(({ img, altimg, title, descr, price }) => {
       new MenuCart(
@@ -65,4 +57,4 @@ function cardsMenu() {
   });
 }
 
-module.exports = cardsMenu;
+export default cardsMenu;

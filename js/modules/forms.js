@@ -1,31 +1,13 @@
-function forms() {
-  const forms = document.querySelectorAll("form");
+import { openModal, closeModal } from "../utils";
+import { message } from "../core/variables";
+import { postData } from "../services";
 
-  const message = {
-    loading: "./img/form/spinner.svg",
-    success: "Спасибо!Скоро мы с вами свяжемся",
-    failure: "Что-то пошло не так...",
-  };
+function forms(formSelector, modalTimerId) {
+  const forms = document.querySelectorAll(formSelector);
 
   forms.forEach((form) => {
     bindPostData(form);
   });
-
-  const postData = async (url, data) => {
-    const result = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data,
-    });
-
-    if (!result.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${result.status}`);
-    }
-
-    return await result.json();
-  };
 
   function bindPostData(form) {
     form.addEventListener("submit", (event) => {
@@ -43,6 +25,7 @@ function forms() {
         .then((data) => {
           console.log(data);
           showThanksModal(message.success);
+          statusMessage.remove();
         })
         .catch((e) => {
           showThanksModal(message.failure);
@@ -50,7 +33,6 @@ function forms() {
         })
         .finally(() => {
           form.reset();
-          statusMessage.remove();
         });
     });
   }
@@ -59,7 +41,7 @@ function forms() {
     const prevModalDialog = document.querySelector(".modal__dialog");
 
     prevModalDialog.classList.add("hide");
-    openModal();
+    openModal(".modal", modalTimerId);
 
     const thanksModal = document.createElement("div");
     thanksModal.classList.add("modal__dialog");
@@ -75,9 +57,9 @@ function forms() {
       thanksModal.remove();
       prevModalDialog.classList.add("show");
       prevModalDialog.classList.remove("hide");
-      closeModal();
+      closeModal(".modal");
     }, 4000);
   }
 }
 
-module.exports = forms;
+export default forms;
