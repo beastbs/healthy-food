@@ -4,7 +4,8 @@
   "description": "\"landing page healthy food\"",
   "main": "index.js",
   "scripts": {
-    "s": "npx json-server --watch db.json"
+    "s": "npx json-server --watch db.json",
+    "webpack": "npx webpack"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   },
   "homepage": "https://github.com/beastbs/healthy-food#readme",
   "devDependencies": {
-    "json-server": "^0.17.1"
+    "json-server": "^0.17.1",
+    "webpack": "^5.80.0",
+    "webpack-cli": "^5.0.2"
   }
 }
